@@ -85,5 +85,27 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
         }
         return nil
     }
+    
+    
+    // MARK: - Navigation
+
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        guard let nextViewController:SecondViewController = segue.destination as? SecondViewController else {
+            return
+        }
+        
+        guard let cell:UITableViewCell = sender as? UITableViewCell else{
+            return
+        }
+        
+        // SecondViewController의 textlabel property는 아직 메모리에 올라와 있지 않기때문에 에러발생!
+        // nextViewController.textLabel.text = cell.textLabel?.text
+        
+        nextViewController.textToSet = cell.textLabel?.text
+        
+    }
+    
 }
 
