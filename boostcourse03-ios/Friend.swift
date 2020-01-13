@@ -19,6 +19,8 @@ import Foundation
  */
 
 struct Friend: Codable {
+    
+    
     struct Address: Codable {
         let country:String
         let city:String
@@ -26,20 +28,20 @@ struct Friend: Codable {
     
     let name:String
     let age:Int
-    let address_info:Address
+    let addressInfo:Address
     
     var nameAndAge: String {
         return self.name + "(\(self.age))"
     }
     
     var fullAddress: String {
-        return self.address_info.city + ", " + self.address_info.country
+        return self.addressInfo.city + ", " + self.addressInfo.country
     }
     
-    enum Codingkeys: String, CodingKey {
-        case name, age
-        case addressInfo = "address_info"
-    }
+     enum CodingKeys: String, CodingKey{
+      case name, age
+      case addressInfo = "address_info"
+     }
 }
 
 
