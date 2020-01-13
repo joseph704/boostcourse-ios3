@@ -25,26 +25,39 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
         return formatter
     }()
     
+    var friends: [Friend] = []
     
     @IBAction func touchupButton(_ sender: UIButton){
         dates.append(Date())
         
 //        self.tableView.reloadData()
-        self.tableView.reloadSections(IndexSet(2...2), with: UITableView.RowAnimation.automatic)
+        self.tableView.reloadSections(IndexSet(3...3), with: UITableView.RowAnimation.automatic)
     }
     var korea:[String] = ["가","나","다","라"]
     var english:[String] = ["A","B","C","D"]
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.tableView.dataSource = self
         self.tableView.delegate = self
         
+        let jsonDecoder: JSONDecoder = JSONDecoder()
+        guard let dataAsset: NSDataAsset = NSDataAsset(name: "friends") else { return }
+        do {
+            self.friends = try jsonDecoder.decode([Friend].self, from: dataAsset.data)
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        self.tableView.reloadData()
     }
+        
+    
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 4
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -54,6 +67,8 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
         case 1:
             return english.count
         case 2:
+            return self.friends.count
+        case 3:
             return dates.count
         default:
             return 0
@@ -69,7 +84,17 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
             let text:String = indexPath.section == 0 ? korea[indexPath.row] : english[indexPath.row]
             cell.textLabel?.text = text
             return cell
+        } else if indexPath.section == 2 {
+            let cell:UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "jsonCell", for: indexPath)
+            
+            let Friend:Friend = friends[indexPath.row]
+            
+            cell.textLabel?.text = Friend.name + "(\(Friend.age))"
+            cell.detailTextLabel?.text = Friend.address_info.country + ", " + Friend.address_info.city
+            
+            return cell
         } else {
+            
             let cell:CustomTableViewCell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath) as! CustomTableViewCell
             
             cell.leftLable.text = self.dateFormatter.string(from: dates[indexPath.row])
@@ -106,6 +131,5 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
         nextViewController.textToSet = cell.textLabel?.text
         
     }
-    
-}
 
+}
