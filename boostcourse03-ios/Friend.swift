@@ -5,7 +5,6 @@
 //  Created by 차요셉 on 13/01/2020.
 //  Copyright © 2020 차요셉. All rights reserved.
 //
-
 import Foundation
 
 
@@ -29,5 +28,19 @@ struct Friend: Codable {
     let age:Int
     let address_info:Address
     
+    var nameAndAge: String {
+        return self.name + "(\(self.age))"
+    }
     
+    var fullAddress: String {
+        return self.address_info.city + ", " + self.address_info.country
+    }
+    
+    enum Codingkeys: String, CodingKey {
+        case name, age
+        case addressInfo = "address_info"
+    }
 }
+
+
+
